@@ -1,4 +1,4 @@
-package com.kelvingoodman.myRetail.model;
+package com.kelvingoodman.myRetail.dto;
 
 import lombok.Data;
 import java.math.BigDecimal;
