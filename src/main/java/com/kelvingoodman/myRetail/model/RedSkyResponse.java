@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RedSkyResponse {
-    private String name;
+    private Product product;
 }
