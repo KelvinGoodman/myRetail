@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @RestController
@@ -19,8 +17,7 @@ public class ProductController {
     RedSkyService redSkyService;
 
     @GetMapping("/product/{id}")
-    public Product getProduct(@PathVariable("id") @NotBlank @Size(max = 10) int id) {
-        System.out.println(id);
+    public Product getProduct(@PathVariable("id") int id) {
         return new Product()
                 .withId(id)
                 .withName(redSkyService.getProductInfo(id).getProduct().getItem().getProduct_description().getTitle())
