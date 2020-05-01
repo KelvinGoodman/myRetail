@@ -7,15 +7,15 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@DynamoDBTable(tableName = "ProductPricing")
+@DynamoDBTable(tableName = "ProductPrice")
 @Setter
-public class Product {
-    private String id;
+public class ProductPrice {
+    private int id;
     private BigDecimal price;
     private String currencyCode;
 
     @DynamoDBHashKey
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -27,5 +27,20 @@ public class Product {
     @DynamoDBAttribute
     public String getCurrencyCode() {
         return currencyCode;
+    }
+
+    public ProductPrice withId(int id) {
+        setId(id);
+        return this;
+    }
+
+    public ProductPrice withPrice(BigDecimal price) {
+        setPrice(price);
+        return this;
+    }
+
+    public ProductPrice withCurrencyCode(String currencyCode) {
+        setCurrencyCode(currencyCode);
+        return this;
     }
 }
