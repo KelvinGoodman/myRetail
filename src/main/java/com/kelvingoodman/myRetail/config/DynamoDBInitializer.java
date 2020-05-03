@@ -32,7 +32,6 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
             server = ServerRunner.createServerFromCommandLineArgs(localArgs);
             server.start();
             populatePriceTable();
-            System.out.println("found " + amazonDynamoDB.listTables().getTableNames());
         } catch (Exception e) {
             //TODO use real logger
             System.out.println("DynamoDb failed to start: " + e.toString());
@@ -46,9 +45,12 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
                 new ProvisionedThroughput(1L, 1L));
         amazonDynamoDB.createTable(tableRequest);
 
-        //Remove!
-        ProductPrice productPrice = new ProductPrice().withId(13860428).withPrice(BigDecimal.valueOf(321)).withCurrencyCode("USD");
+        //TODO make this much better
+        ProductPrice productPrice = new ProductPrice().withId(1386048).withPrice(BigDecimal.valueOf(28.99)).withCurrencyCode("USD");
         dynamoDBMapper.save(productPrice);
+
+        ProductPrice productPrice1 = new ProductPrice().withId(1386049).withPrice(BigDecimal.valueOf(29.99)).withCurrencyCode("USD");
+        dynamoDBMapper.save(productPrice1);
     }
 }
 

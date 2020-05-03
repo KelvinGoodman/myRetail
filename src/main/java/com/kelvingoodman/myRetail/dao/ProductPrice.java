@@ -10,12 +10,12 @@ import java.math.BigDecimal;
 @DynamoDBTable(tableName = "ProductPrice")
 @Setter
 public class ProductPrice {
-    private int id;
+    private Integer id;
     private BigDecimal price;
     private String currencyCode;
 
     @DynamoDBHashKey
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class ProductPrice {
         return currencyCode;
     }
 
-    public ProductPrice withId(int id) {
+    public ProductPrice withId(Integer id) {
         setId(id);
         return this;
     }

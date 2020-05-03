@@ -7,12 +7,13 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
+@EnableDynamoDBRepositories(basePackages = "com.kelvingoodman.myRetail.repository")
 public class DynamoDBConfig {
 
     @Value("${amazon.aws.accesskey}")
@@ -29,17 +30,12 @@ public class DynamoDBConfig {
         return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
     }
 
-    @Bean("amazonDynamoDB")
+    @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         AmazonDynamoDB ddb = AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(dynamoDBEndpoint, Regions.US_WEST_2.getName()))
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials()))
                 .build();
         return ddb;
-    }
-
-    @Bean("dynamoDBMapper")
-    public DynamoDBMapper dynamoDBMapper() {
-        return new DynamoDBMapper(amazonDynamoDB());
     }
 }
