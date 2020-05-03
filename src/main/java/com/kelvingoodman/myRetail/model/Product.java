@@ -7,4 +7,9 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
     private Item item;
+
+    public Product withItem(Item item) {
+        setItem(item);
+        return this;
+    }
 }
