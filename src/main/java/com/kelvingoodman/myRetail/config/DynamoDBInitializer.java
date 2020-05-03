@@ -13,15 +13,27 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
 
 @Component
 public class DynamoDBInitializer implements ApplicationListener<ContextRefreshedEvent> {
+    /**
+     * Sample of product ids known to exist in red sky
+     */
 
+    private final int[] productIds = {13860416, 13860419, 13860420, 13860423, 13860424, 13860425, 13860427, 13860428, 13860429, 13860431,
+            13860432, 13860433};
     @Autowired
     AmazonDynamoDB amazonDynamoDB;
-
     @Autowired
     DynamoDBMapper dynamoDBMapper;
+
+    /**
+     * On application context creation or refresh onApplicationEvent will create a new instance of DynamoDB in memory
+     * and populate a table with know product ids and random prices. The database is destroyed as soon as the application
+     * stops running, so this solution is only to demo a proof of concept
+     */
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -45,12 +57,23 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
                 new ProvisionedThroughput(1L, 1L));
         amazonDynamoDB.createTable(tableRequest);
 
-        //TODO make this much better
-        ProductPrice productPrice = new ProductPrice().withId(1386048).withPrice(BigDecimal.valueOf(28.99)).withCurrencyCode("USD");
-        dynamoDBMapper.save(productPrice);
+        for (int productId : productIds) {
+            ProductPrice productPrice = new ProductPrice().withId(productId)
+                    .withPrice(generateRandomPrice())
+                    .withCurrencyCode("USD");
+            dynamoDBMapper.save(productPrice);
+        }
+    }
 
-        ProductPrice productPrice1 = new ProductPrice().withId(1386049).withPrice(BigDecimal.valueOf(29.99)).withCurrencyCode("USD");
-        dynamoDBMapper.save(productPrice1);
+    /**
+     * @return a random price represented as BigDecimal with 2 decimal places between 10.00 and 500.00
+     */
+    private BigDecimal generateRandomPrice() {
+        Random random = new Random();
+        double minPrice = 10D;
+        double maxPrice = 500D;
+        double price = minPrice + random.nextDouble() * (maxPrice - minPrice);
+        return new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
     }
 }
 
