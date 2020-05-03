@@ -4,6 +4,8 @@ import com.kelvingoodman.myRetail.exception.GenericException;
 import com.kelvingoodman.myRetail.exception.RedSkyProductNotFoundException;
 import com.kelvingoodman.myRetail.model.RedSkyResponse;
 import com.kelvingoodman.myRetail.service.RedSkyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class RedSkyServiceImpl implements RedSkyService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedSkyServiceImpl.class);
 
     @Override
     public RedSkyResponse getProductInfo(int id) {
@@ -23,8 +27,15 @@ public class RedSkyServiceImpl implements RedSkyService {
                         .build(id))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new RedSkyProductNotFoundException()))
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new GenericException()))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse
+                        -> {
+                    LOGGER.error("Unable to find red sky product");
+                    return Mono.error(new RedSkyProductNotFoundException());
+                })
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
+                    LOGGER.error("Error calling red sky service");
+                    return Mono.error(new GenericException());
+                })
                 .bodyToMono(RedSkyResponse.class)
                 .block();
     }

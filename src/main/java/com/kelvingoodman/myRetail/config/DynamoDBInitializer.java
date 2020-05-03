@@ -7,6 +7,8 @@ import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.kelvingoodman.myRetail.dao.ProductPrice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -18,11 +20,12 @@ import java.util.Random;
 
 @Component
 public class DynamoDBInitializer implements ApplicationListener<ContextRefreshedEvent> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynamoDBInitializer.class);
     /**
      * Sample of product ids known to exist in red sky
      */
 
-    private final int[] productIds = {13860416, 13860419, 13860420, 13860423, 13860424, 13860425, 13860427, 13860428, 13860429, 13860431,
+    private final int[] PRODUCT_IDS = {13860416, 13860419, 13860420, 13860423, 13860424, 13860425, 13860427, 13860428, 13860429, 13860431,
             13860432, 13860433};
     @Autowired
     AmazonDynamoDB amazonDynamoDB;
@@ -45,8 +48,7 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
             server.start();
             populatePriceTable();
         } catch (Exception e) {
-            //TODO use real logger
-            System.out.println("DynamoDb failed to start: " + e.toString());
+            LOGGER.error("DynamoDb failed to start: " + e.toString());
         }
     }
 
@@ -57,7 +59,7 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
                 new ProvisionedThroughput(1L, 1L));
         amazonDynamoDB.createTable(tableRequest);
 
-        for (int productId : productIds) {
+        for (int productId : PRODUCT_IDS) {
             ProductPrice productPrice = new ProductPrice().withId(productId)
                     .withPrice(generateRandomPrice())
                     .withCurrencyCode("USD");
