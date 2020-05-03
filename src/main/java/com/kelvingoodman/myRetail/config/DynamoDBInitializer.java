@@ -37,7 +37,6 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
      * and populate a table with know product ids and random prices. The database is destroyed as soon as the application
      * stops running, so this solution is only to demo a proof of concept
      */
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         final String[] localArgs = {"-inMemory"};
@@ -52,6 +51,9 @@ public class DynamoDBInitializer implements ApplicationListener<ContextRefreshed
         }
     }
 
+    /**
+     * Populates ProductPrice with random pricing data for product ids that are known to exist in red sky
+     */
     private void populatePriceTable() {
         CreateTableRequest tableRequest = dynamoDBMapper
                 .generateCreateTableRequest(ProductPrice.class);

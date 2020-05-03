@@ -17,6 +17,10 @@ public class RedSkyServiceImpl implements RedSkyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedSkyServiceImpl.class);
 
+    /**
+     * @param id of product on red sky API
+     * @return product information from red sky api. Only product title is populated in response
+     */
     @Override
     public RedSkyResponse getProductInfo(int id) {
         WebClient webClient = WebClient.create("https://redsky.target.com");
