@@ -37,7 +37,7 @@ public class ProductController {
                     .withName(redSkyResponse.getProduct().getItem().getProduct_description().getTitle())
                     .withCurrent_price(new Price().withCurrency_code(productPrice.getCurrencyCode()).withValue(productPrice.getPrice()));
         } catch (ProductPriceNotFoundException ex) {
-            LOGGER.error("Unable to find product price: " + ex.getMessage());
+            LOGGER.error("Unable to find product price");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         }
     }
