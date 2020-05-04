@@ -6,6 +6,7 @@ import com.kelvingoodman.myRetail.model.RedSkyResponse;
 import com.kelvingoodman.myRetail.service.RedSkyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,24 @@ public class RedSkyServiceImpl implements RedSkyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedSkyServiceImpl.class);
 
+    @Value("${red.sky.hostname}")
+    private String redSkyHost;
+
+    @Value("${red.sky.path}")
+    private String redSkyPath;
+
     /**
      * @param id of product on red sky API
      * @return product information from red sky api. Only product title is populated in response
      */
     @Override
+
     public RedSkyResponse getProductInfo(int id) {
-        WebClient webClient = WebClient.create("https://redsky.target.com");
+        WebClient webClient = WebClient.create(redSkyHost);
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/v2/pdp/tcin/{id}")
+                        .path(redSkyPath)
                         .build(id))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

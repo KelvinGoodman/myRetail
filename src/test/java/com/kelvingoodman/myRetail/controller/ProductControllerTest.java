@@ -65,7 +65,7 @@ public class ProductControllerTest {
 
         String expectedMessage = "ProductPriceNotFoundException";
         String actualMessage = responseStatusException.getMessage();
-        
+
         assertTrue(actualMessage.contains(expectedMessage));
     }
 }
