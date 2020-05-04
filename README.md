@@ -31,10 +31,20 @@ For example:
     }
 }
 ```
+Or an error response:
+```
+{
+    "timestamp": "2020-05-04T22:06:12.462+0000",
+    "status": 404,
+    "error": "Not Found",
+    "message": "Product not found",
+    "path": "/product/13860417"
+}
+```
 ## A Few Notes
 1. I embedded a DynamoDB Local instance in the application to store pricing information. After the Spring context is
  created, `DynamoDBInitializer.java` creates an instance of DynamoDB running in memory and populates a table with random
- prices for know product ids (I checked several product ids against Red Sky and made a list of some that work). When the 
- application stops the database is destroyed. Obviously this is cannot be a production solution, but for a proof of 
- concept it eliminates the need to store and protect keys and it makes it easy for others to run the application without 
- first standing up a database.
+ prices for known product ids (I checked several product ids against Red Sky and made a list of some that work). When 
+ the application stops the database is destroyed. This is cannot be a production solution, but for a proof of concept it 
+ eliminates the need to store and protect keys and it makes it easy for others to run the application without first 
+ standing up a database.
