@@ -12,12 +12,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 @RestController
+@Validated
 public class ProductController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
@@ -26,9 +31,14 @@ public class ProductController {
     @Autowired
     ProductPriceRepository productPriceRepository;
 
+    /***
+     * Test database is populated with date for product ids between 13860416 and 13860433, so I've restricted inputs
+     * to this range
+     * @param id
+     * @return Product
+     */
     @GetMapping(value = "/product/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-
-    public Product getProduct(@PathVariable("id") int id) {
+    public Product getProduct(@PathVariable("id") @Min(13860416) @Max(13860433) int id) {
         try {
             RedSkyResponse redSkyResponse = redSkyService.getProductInfo(id);
             ProductPrice productPrice = productPriceRepository.findById(id).orElseThrow(() -> new ProductPriceNotFoundException());
