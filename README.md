@@ -70,3 +70,6 @@ For example:
  standing up a database.
 2. GET requests are validated to ensure the id is an integer greater than 0. POST bodies are validated to ensure all 
 fields are of the correct type and not blank. 
+3. (Optional) Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) to access DynamoDB 
+directly  
+`aws dynamodb list-tables --endpoint-url http://localhost:8000/ --region us-east-2`

@@ -33,7 +33,7 @@ public class DynamoDBConfig {
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         AmazonDynamoDB ddb = AmazonDynamoDBClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(dynamoDBEndpoint, Regions.US_WEST_2.getName()))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(dynamoDBEndpoint, Regions.US_EAST_2.getName()))
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials()))
                 .build();
         return ddb;
