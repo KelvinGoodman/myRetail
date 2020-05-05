@@ -12,10 +12,10 @@
 Produces a response of the form:
 ```
 {
-    "id": "int",
+    "id": int,
     "name": "String",
     "current_price": {
-        "value": "BigDecimal",
+        "value": BigDecimal,
         "currency_code": "String"
     }
 }
@@ -41,6 +41,26 @@ Or an error response:
     "path": "/product/13860417"
 }
 ```
+
+`POST http://localhost:8080/product/{id}`
+
+POST should return HTTP status 201 and an empty body. The request body must be of the form:
+```
+{
+	"id": int,
+	"price": BigDecimal,
+	"currencyCode": "String"
+}
+```
+
+For example:
+```
+{
+	"id": 13860416,
+	"price": 123,
+	"currencyCode": "Monopoly"
+}
+```
 ## A Few Notes
 1. I embedded a DynamoDB Local instance in the application to store pricing information. After the Spring context is
  created, `DynamoDBInitializer.java` creates an instance of DynamoDB running in memory and populates a table with random
@@ -48,3 +68,5 @@ Or an error response:
  the application stops the database is destroyed. This is cannot be a production solution, but for a proof of concept it 
  eliminates the need to store and protect keys and it makes it easy for others to run the application without first 
  standing up a database.
+2. GET requests are validated to ensure the id is an integer greater than 0. POST bodies are validated to ensure all 
+fields are of the correct type and not blank. 

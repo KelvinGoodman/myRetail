@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.constraints.Max;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 @RestController
@@ -38,11 +36,10 @@ public class ProductController {
      * @return Product
      */
     @GetMapping(value = "/product/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product getProduct(@PathVariable("id") @Min(13860416) @Max(13860433) int id) {
+    public Product getProduct(@PathVariable("id") @Min(0) int id) {
         try {
             RedSkyResponse redSkyResponse = redSkyService.getProductInfo(id);
             ProductPrice productPrice = productPriceRepository.findById(id).orElseThrow(() -> new ProductPriceNotFoundException());
-
             return new Product().withId(id)
                     .withName(redSkyResponse.getProduct().getItem().getProduct_description().getTitle())
                     .withCurrent_price(new Price().withCurrency_code(productPrice.getCurrencyCode()).withValue(productPrice.getPrice()));
@@ -50,5 +47,11 @@ public class ProductController {
             LOGGER.error("Unable to find product price");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         }
+    }
+
+    @PostMapping(value = "/product/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveProduct(@Valid @RequestBody ProductPrice productPrice) {
+        productPriceRepository.save(productPrice);
     }
 }
