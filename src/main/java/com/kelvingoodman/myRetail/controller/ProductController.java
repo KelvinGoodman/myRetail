@@ -49,7 +49,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value = "/product/{id}")
+    @PostMapping(value = "/product")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveProduct(@Valid @RequestBody ProductPrice productPrice) {
         productPriceRepository.save(productPrice);

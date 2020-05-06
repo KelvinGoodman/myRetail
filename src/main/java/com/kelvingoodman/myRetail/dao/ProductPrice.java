@@ -4,18 +4,21 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @DynamoDBTable(tableName = "ProductPrice")
 @Setter
 public class ProductPrice {
-    @NotBlank
+    @NotNull
     private Integer id;
-    @NotBlank
+    @NotNull
     private BigDecimal price;
     @NotBlank
+    @Length(min = 1, max = 5)
     private String currencyCode;
 
     @DynamoDBHashKey

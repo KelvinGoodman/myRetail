@@ -42,7 +42,7 @@ Or an error response:
 }
 ```
 
-`POST http://localhost:8080/product/{id}`
+`POST http://localhost:8080/product`
 
 POST should return HTTP status 201 and an empty body. The request body must be of the form:
 ```
